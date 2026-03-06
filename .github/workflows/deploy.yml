@@ -19,11 +19,11 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/ci-cd-app:latest .
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/ci-cd-app:${{ github.sha }} .
 
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/ci-cd-app:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/ci-cd-app:${{ github.sha }}
 
       - name: Setup SSH
         run: |
@@ -38,14 +38,14 @@ jobs:
             set -e
 
             echo "Pulling latest image"
-            docker pull karnwalhimanshu/ci-cd-app:latest
+            docker pull karnwalhimanshu/ci-cd-app:${{ github.sha }}
 
             echo "Stopping old container"
             docker stop ci-cd-app || true
             docker rm ci-cd-app || true
 
             echo "Starting new container"
-            docker run -d -p 3000:3000 --name ci-cd-app karnwalhimanshu/ci-cd-app:latest
+            docker run -d -p 3000:3000 --name ci-cd-app --pull always karnwalhimanshu/ci-cd-app:${{ github.sha }}
 
             echo "Deployment complete"
           EOF
