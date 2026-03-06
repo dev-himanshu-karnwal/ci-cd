@@ -38,14 +38,14 @@ jobs:
             set -e
 
             echo "Pulling latest image"
-            docker pull karnwalhimanshu/cicd:latest
+            docker pull karnwalhimanshu/ci-cd-app:latest
 
             echo "Stopping old container"
             docker stop ci-cd-app || true
             docker rm ci-cd-app || true
 
             echo "Starting new container"
-            docker run -d -p 3000:3000 --name ci-cd-app karnwalhimanshu/cicd:latest
+            docker run -d -p 3000:3000 --name ci-cd-app karnwalhimanshu/ci-cd-app:latest
 
             echo "Deployment complete"
           EOF
