@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup SSH
@@ -23,8 +23,18 @@ jobs:
       - name: Deploy to EC2
         run: |
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e
+
             cd /home/ec2-user/ci-cd
+
+            echo "Pulling latest code"
             git pull origin master
-            npm install
-            npm start
+
+            echo "Building Docker image"
+            docker compose build --no-cache
+
+            echo "Restarting containers"
+            docker compose up -d
+
+            echo "Deployment finished"
           EOF
