@@ -52,4 +52,7 @@ jobs:
             docker compose up -d
 
             echo "Deployment complete"
+
+            docker image prune -f
+            echo "Cleaned up unused images"
           EOF
